@@ -24,8 +24,8 @@ public class ReceitaService
     var previousFlow = await _context
       .CashFlows
       .Where(x => x.Value == dto.Value 
-              && x.Date.Month == dto.Date!.Value.Month
-              && x.Description.ToUpper() == dto.Description.ToUpper())
+          && x.Date.Month == dto.Date!.Value.Month
+          && x.Description.ToUpper() == dto.Description.ToUpper())
       .FirstOrDefaultAsync();
 
     if (dto.Value <= 0)
@@ -45,9 +45,46 @@ public class ReceitaService
     return Result.Ok<ReadReceitaDTO>(readFlow);
   }
 
-  public async Task<ActionResult<List<ReadReceitaDTO>>> ReadCashFlowAsync()
+  public async Task<List<ReadReceitaDTO>> ReadCashFlowAsync()
   {
     var flow = await _context.CashFlows.Where(x => x.Type == FlowType.Incoming).ToListAsync();
     return _mapper.Map<List<ReadReceitaDTO>>(flow);
   }
+
+  public async Task<Result<ReadReceitaDTO>> ReadSingleCashFlowAsync(int id)
+  {
+    var flow = await _context.CashFlows
+      .Where(x => x.Type == FlowType.Incoming && x.Id == id)
+      .FirstOrDefaultAsync();
+
+    if (flow is null)
+      return Result.Fail("Receita não encontrada.");
+
+    return Result.Ok<ReadReceitaDTO>(_mapper.Map<ReadReceitaDTO>(flow));
+  }
+
+  public async Task<Result> UpdateFlowAsync(int id, CreateReceitaDTO dto)
+  {
+    var flow = await _context.CashFlows
+      .FirstOrDefaultAsync(x => x.Id == id);
+
+    if (dto.Value <= 0)
+      return Result.Fail("Valor deve ser maior que 0.");
+
+    if (flow is null)
+      return Result.Fail("Registro não encontrado.");
+
+    if (FlowValidation(flow, dto))
+      return Result.Fail("Receita já cadastrada para este mês.");
+          
+    _mapper.Map(dto, flow);
+    await _context.SaveChangesAsync();
+
+    return Result.Ok();
+  }
+
+  private bool FlowValidation (CashFlow flow, CreateReceitaDTO dto) =>
+    flow.Value == dto.Value 
+    && flow.Date.Month == dto.Date!.Value.Month
+    && flow.Description.ToUpper() == dto.Description.ToUpper();
 }

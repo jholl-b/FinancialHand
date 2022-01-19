@@ -25,10 +25,33 @@ public class ReceitasController : ControllerBase
 
     var flow = result.Value;
     
-    return CreatedAtAction(nameof(Get), new {Id = flow.Id}, flow);
+    return CreatedAtAction(nameof(GetWithId), new {Id = flow.Id}, flow);
   }
+
+  [HttpPut("{id}")]
+  public async Task<ActionResult> Put(int id, CreateReceitaDTO dto)
+  {
+    var result = await _service.UpdateFlowAsync(id, dto);
+
+    if (result.IsFailed)
+      return NotFound(result.Errors.Select(x => x.Message).ToList());
+
+    return NoContent();
+  }
+
 
   [HttpGet]
   public async Task<ActionResult<List<ReadReceitaDTO>>> Get() 
     => await _service.ReadCashFlowAsync();
+
+  [HttpGet("{id}")]
+  public async Task<ActionResult<ReadReceitaDTO>> GetWithId(int id)
+  {
+    var result = await _service.ReadSingleCashFlowAsync(id);
+
+    if (result.IsFailed)
+      return NotFound(result.Errors.Select( x => x.Message).ToList());
+
+    return Ok(result.Value);
+  }
 }
