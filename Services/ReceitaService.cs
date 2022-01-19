@@ -47,7 +47,8 @@ public class ReceitaService
 
   public async Task<List<ReadReceitaDTO>> ReadCashFlowAsync()
   {
-    var flow = await _context.CashFlows.Where(x => x.Type == FlowType.Incoming).ToListAsync();
+    var flow = await _context.CashFlows.Where(x => 
+      x.Type == FlowType.Incoming).ToListAsync();
     return _mapper.Map<List<ReadReceitaDTO>>(flow);
   }
 
@@ -78,6 +79,20 @@ public class ReceitaService
       return Result.Fail("Receita já cadastrada para este mês.");
           
     _mapper.Map(dto, flow);
+    await _context.SaveChangesAsync();
+
+    return Result.Ok();
+  }
+
+  public async Task<Result> DeleteFlowAsync(int id)
+  {
+    var flow = await _context.CashFlows.FirstOrDefaultAsync(x => 
+      x.Id == id);
+
+    if (flow is null)
+      return Result.Fail("Registro não encontrado.");
+
+    _context.Remove(flow);
     await _context.SaveChangesAsync();
 
     return Result.Ok();

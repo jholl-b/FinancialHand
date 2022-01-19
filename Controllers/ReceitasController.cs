@@ -54,4 +54,15 @@ public class ReceitasController : ControllerBase
 
     return Ok(result.Value);
   }
+
+  [HttpDelete("{id}")]
+  public async Task<ActionResult> Delete(int id)
+  {
+    var result = await _service.DeleteFlowAsync(id);
+
+    if (result.IsFailed)
+      return NotFound(result.Errors.Select( x => x.Message).ToList());
+
+    return NoContent();
+  }
 }
