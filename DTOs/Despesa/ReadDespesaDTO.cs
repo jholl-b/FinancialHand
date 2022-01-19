@@ -1,9 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace FinancialHand.DTOs.Receita;
+namespace FinancialHand.DTOs.Despesa;
 
-public record ReadReceitaDTO
+public record ReadDespesaDTO
 {
   [JsonPropertyName("id")]
   public int Id { get; init; }

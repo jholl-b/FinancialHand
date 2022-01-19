@@ -1,4 +1,5 @@
 using AutoMapper;
+using FinancialHand.DTOs.Despesa;
 using FinancialHand.DTOs.Receita;
 using FinancialHand.Models;
 
@@ -10,5 +11,8 @@ public class CashFlowProfile : Profile
   {
       CreateMap<CreateReceitaDTO, CashFlow>();
       CreateMap<CashFlow, ReadReceitaDTO>();
+
+      CreateMap<CreateDespesaDTO, CashFlow>();
+      CreateMap<CashFlow, ReadDespesaDTO>();
   }
 }
