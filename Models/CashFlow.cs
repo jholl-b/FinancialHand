@@ -8,7 +8,7 @@ public enum FlowType
 
 public record CashFlow 
 {
-  public int Id { get; set; }
+  public int Id { get; init; }
   public string Description { get; init; } = default!;
   public decimal Value { get; init; }
   public DateTime Date { get; init; }

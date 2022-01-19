@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace FinancialHand.DTOs.Despesa;
 
-public class CreateDespesaDTO
+public record CreateDespesaDTO
 {
   [JsonPropertyName("descricao")]
   [Required(ErrorMessage = "O campo descricao é obrigatório.")]
