@@ -1,15 +1,32 @@
+using FinancialHand.Data;
+using FinancialHand.Services;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.AddScoped<ReceitaService>();
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+builder.Services.AddDbContext<FinancialContext>(opts =>
+    opts.UseMySql(
+        builder.Configuration.GetConnectionString("FinantialConnection"),
+        MySqlServerVersion.AutoDetect(builder.Configuration.GetConnectionString("FinantialConnection"))
+    )
+    .LogTo(Console.WriteLine, LogLevel.Information)
+    .EnableSensitiveDataLogging()
+    .EnableDetailedErrors()
+);
+
+builder.Services.AddAutoMapper(
+    AppDomain.CurrentDomain.GetAssemblies()
+);
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
