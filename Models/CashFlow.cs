@@ -6,6 +6,17 @@ public enum FlowType
   Outcoming
 } 
 
+public enum Category {
+  Food,
+  Health,
+  Home,
+  Transport,
+  Education,
+  Entertainment, //Leisure, //recriation // hobby
+  Unforeseen,
+  Others
+}
+
 public record CashFlow 
 {
   public int Id { get; init; }
@@ -13,4 +24,5 @@ public record CashFlow
   public decimal Value { get; init; }
   public DateTime Date { get; init; }
   public FlowType Type { get; set; }
+  public Category Category { get; set; } = Category.Others;
 }
