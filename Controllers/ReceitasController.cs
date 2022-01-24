@@ -66,6 +66,17 @@ public class ReceitasController : ControllerBase
     return Ok(result.Value);
   }
 
+  [HttpGet("{ano}/{mes}")]
+  public async Task<ActionResult<List<ReadReceitaDTO>>> GetWithDate(int ano, int mes)
+  {
+     var result = await _service.ReadCashFlowAsync(ano, mes);
+
+    if (result.IsFailed)
+      return NotFound(result.Errors.Select( x => x.Message).ToList());
+
+    return Ok(result.Value);
+  }
+
   [HttpDelete("{id}")]
   public async Task<ActionResult> Delete(int id)
   {

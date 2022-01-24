@@ -67,6 +67,19 @@ public class ReceitaService
     return Result.Ok<List<ReadReceitaDTO>>(_mapper.Map<List<ReadReceitaDTO>>(flow));
   }
 
+  public async Task<Result<List<ReadReceitaDTO>>> ReadCashFlowAsync(int ano, int mes)
+  {
+    var flow = await _context.CashFlows
+      .Where(x => x.Date.Year == ano && x.Date.Month == mes
+        && x.Type == FlowType.Incoming)
+      .ToListAsync();
+
+    if (flow is null || flow.Count() == 0)
+      return Result.Fail("Receita não encontrada.");
+
+    return Result.Ok<List<ReadReceitaDTO>>(_mapper.Map<List<ReadReceitaDTO>>(flow));
+  }
+
   public async Task<Result<ReadReceitaDTO>> ReadSingleCashFlowAsync(int id)
   {
     var flow = await _context.CashFlows
