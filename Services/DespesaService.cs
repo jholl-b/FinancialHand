@@ -52,6 +52,19 @@ public class DespesaService
     return _mapper.Map<List<ReadDespesaDTO>>(flow);
   }
 
+  public async Task<Result<List<ReadDespesaDTO>>> ReadCashFlowAsync(string descricao)
+  {
+    var flow = await _context.CashFlows
+      .Where(x => EF.Functions.Like(x.Description.ToUpper(), $"%{descricao.ToUpper()}%")
+        && x.Type == FlowType.Outcoming)
+      .ToListAsync();
+
+    if (flow is null)
+      return Result.Fail("Despesa não encontrada.");
+
+    return Result.Ok<List<ReadDespesaDTO>>(_mapper.Map<List<ReadDespesaDTO>>(flow));
+  }
+
   public async Task<Result<ReadDespesaDTO>> ReadSingleCashFlowAsync(int id)
   {
     var flow = await _context.CashFlows

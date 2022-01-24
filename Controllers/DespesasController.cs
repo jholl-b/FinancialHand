@@ -39,8 +39,19 @@ public class DespesasController : ControllerBase
 
 
   [HttpGet]
-  public async Task<ActionResult<List<ReadDespesaDTO>>> Get() 
-    => await _service.ReadCashFlowAsync();
+  public async Task<ActionResult<List<ReadDespesaDTO>>> Get([FromQuery] string? descricao) 
+  {
+    if (!String.IsNullOrEmpty(descricao))
+    {
+      var result = await _service.ReadCashFlowAsync(descricao);
+
+      if (result.IsFailed)
+        return NotFound(result.Errors.Select( x => x.Message).ToList());
+
+      return Ok(result.Value);
+    }
+    return await _service.ReadCashFlowAsync();
+  }
 
   [HttpGet("{id}")]
   public async Task<ActionResult<ReadDespesaDTO>> GetWithId(int id)
