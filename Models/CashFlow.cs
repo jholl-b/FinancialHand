@@ -1,3 +1,5 @@
+using System.Runtime.Serialization;
+
 namespace FinancialHand.Models;
 
 public enum FlowType
@@ -7,14 +9,22 @@ public enum FlowType
 } 
 
 public enum Category {
+  [EnumMember(Value = "Outras")]
+  Others,
+  [EnumMember(Value = "Alimentação")]
   Food,
+  [EnumMember(Value = "Saúde")]
   Health,
+  [EnumMember(Value = "Moradia")]
   Home,
+  [EnumMember(Value = "Transporte")]
   Transport,
+  [EnumMember(Value = "Educação")]
   Education,
-  Entertainment, //Leisure, //recriation // hobby
-  Unforeseen,
-  Others
+  [EnumMember(Value = "Lazer")]
+  Entertainment,
+  [EnumMember(Value = "Imprevistos")]
+  Unforeseen
 }
 
 public record CashFlow 

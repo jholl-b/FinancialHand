@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using FinancialHand.Models;
 
 namespace FinancialHand.DTOs.Despesa;
 
@@ -14,4 +15,6 @@ public record CreateDespesaDTO
   [JsonPropertyName("data")]
   [Required(ErrorMessage = "O campo data é obrigatório.")]
   public DateTime? Date { get; init; }
+  [JsonPropertyName("categoria")]
+  public string Category { get; set; } = default!;
 }
