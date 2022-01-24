@@ -65,6 +65,19 @@ public class DespesaService
     return Result.Ok<List<ReadDespesaDTO>>(_mapper.Map<List<ReadDespesaDTO>>(flow));
   }
 
+  public async Task<Result<List<ReadDespesaDTO>>> ReadCashFlowAsync(int ano, int mes)
+  {
+    var flow = await _context.CashFlows
+      .Where(x => x.Date.Year == ano && x.Date.Month == mes
+        && x.Type == FlowType.Outcoming)
+      .ToListAsync();
+
+    if (flow is null || flow.Count() == 0)
+      return Result.Fail("Despesa não encontrada.");
+
+    return Result.Ok<List<ReadDespesaDTO>>(_mapper.Map<List<ReadDespesaDTO>>(flow));
+  }
+
   public async Task<Result<ReadDespesaDTO>> ReadSingleCashFlowAsync(int id)
   {
     var flow = await _context.CashFlows
