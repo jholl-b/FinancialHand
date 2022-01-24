@@ -48,9 +48,23 @@ public class ReceitaService
 
   public async Task<List<ReadReceitaDTO>> ReadCashFlowAsync()
   {
-    var flow = await _context.CashFlows.Where(x => 
-      x.Type == FlowType.Incoming).ToListAsync();
+    var flow = await _context.CashFlows
+      .Where(x => x.Type == FlowType.Incoming)
+      .ToListAsync();
     return _mapper.Map<List<ReadReceitaDTO>>(flow);
+  }
+
+  public async Task<Result<List<ReadReceitaDTO>>> ReadCashFlowAsync(string descricao)
+  {
+    var flow = await _context.CashFlows
+      .Where(x => EF.Functions.Like(x.Description.ToUpper(), $"%{descricao.ToUpper()}%")
+        && x.Type == FlowType.Incoming)
+      .ToListAsync();
+
+    if (flow is null)
+      return Result.Fail("Receita não encontrada.");
+
+    return Result.Ok<List<ReadReceitaDTO>>(_mapper.Map<List<ReadReceitaDTO>>(flow));
   }
 
   public async Task<Result<ReadReceitaDTO>> ReadSingleCashFlowAsync(int id)
