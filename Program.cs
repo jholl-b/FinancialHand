@@ -6,6 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<ReceitaService>();
 builder.Services.AddScoped<DespesaService>();
+builder.Services.AddScoped<ResumoService>();
 
 builder.Services.AddControllers();
 
