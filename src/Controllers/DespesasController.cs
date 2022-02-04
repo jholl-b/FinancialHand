@@ -1,9 +1,11 @@
 using FinancialHand.DTOs.Despesa;
 using FinancialHand.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FinancialHand.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("[controller]")]
 public class DespesasController : ControllerBase
